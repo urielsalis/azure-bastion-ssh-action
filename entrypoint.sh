@@ -35,6 +35,7 @@ cat $HOME/shell.sh
 echo Connect to tunnel
 az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET --tenant $TENANT_ID
 az network bastion tunnel --port 50022 --resource-port 22 --target-resource-id $RESOURCE_ID --name $BASTION_NAME --resource-group $RESOURCE_GROUP &
+sleep 5
 
 echo Start Run Command
 
