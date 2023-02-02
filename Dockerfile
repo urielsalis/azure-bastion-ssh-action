@@ -1,4 +1,4 @@
-FROM alpine:latest
+FROM mcr.microsoft.com/azure-cli:latest
 RUN apk update && \
   apk add --no-cache ca-certificates \
   openssh-client \
