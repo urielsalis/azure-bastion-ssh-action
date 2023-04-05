@@ -40,7 +40,7 @@ echo Opening tunnel
 az network bastion tunnel --port 50022 --resource-port 22 --target-resource-id $RESOURCE_ID --name $BASTION_NAME --resource-group $RESOURCE_GROUP &
 # Wait for bastion tunnel port to open
 {
-  while ! echo -n > /dev/tcp/localhost/50022; do
+  while ! nc -z localhost 50022; do
     sleep 1
   done
   sleep 1
