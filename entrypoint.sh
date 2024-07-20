@@ -38,18 +38,15 @@ az login --service-principal -u $CLIENT_ID -p $CLIENT_SECRET --tenant $TENANT_ID
 
 echo Opening tunnel
 az network bastion tunnel --port 50022 --resource-port 22 --target-resource-id $RESOURCE_ID --name $BASTION_NAME --resource-group $RESOURCE_GROUP &
-# Wait for bastion tunnel port to open
-{
-  while ! nc -z localhost 50022; do
-    sleep 1
-  done
-  sleep 1
-} 2>/dev/null
+
+echo Wait for bastion tunnel to open...
+az network bastion wait --created --name $BASTION_NAME --resource-group $RESOURCE_GROUP 
+
 
 echo Run command
 if [ "$INPUT_PASS" = "" ]
 then
   sh -c "ssh $INPUT_ARGS -i $KEYFILE -o StrictHostKeyChecking=no -p $INPUT_PORT ${INPUT_USER}@${INPUT_HOST} < $HOME/shell.sh"
 else
-  sh -c "sshpass -p "$INPUT_PASS" ssh $INPUT_ARGS -o StrictHostKeyChecking=no -p $INPUT_PORT ${INPUT_USER}@${INPUT_HOST} < $HOME/shell.sh"
+  sh -c "sshpass -p '$INPUT_PASS' ssh $INPUT_ARGS -o StrictHostKeyChecking=no -p $INPUT_PORT ${INPUT_USER}@${INPUT_HOST} < $HOME/shell.sh"
 fi
